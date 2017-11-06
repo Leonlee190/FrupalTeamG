@@ -1,0 +1,19 @@
+<HTML>
+	<script>
+		function launchCGI(x,y)
+		{
+			arguments = "x_char="+x+"&y_char="+y;
+			var xhttp = new XMLHttpRequest();
+			URL = "cgi-location.cgi?"+arguments;
+			xhttp.open("GET",URL,false);
+			xhttp.send();
+			alert(xhttp.responseText);
+		}
+	</script>
+	<h1>Location Test</h1>
+	<form onSubmit="launchCGI(x_char.value, y_char.value)">
+		X Location of character: <br> <input type = text name="x_char"> <br>
+		Y Location of character: <br> <input type = text name="y_char"> <br>
+		<INPUT TYPE = submit>
+	</form>
+</HTML>
