@@ -7,7 +7,7 @@ enum item{hatchet = 0, axe = 1, chainsaw = 2, chisel = 3, sledge = 4,
 
 int inventory[8];
 
-int main(void)
+void displayInventory()
 {
   printf("Content-Type: text/plain;charset=us-ascii\n\n");
   printf("Hatchets - 15Wh(%d)\n", inventory[hatchet]);
@@ -19,4 +19,9 @@ int main(void)
   printf("Machetes - 25Wh(%d)\n", inventory[machete]);
   printf("Shears - 35Wh(%d)\n", inventory[shears]);
   return 0;
+}
+
+int main(void)
+{
+  
 }
