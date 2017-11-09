@@ -1,22 +1,13 @@
-#include "save.h";
+#include "save.h"
 
 // return 0 if successful
-int savePlayer(int xCoord, int yCoord, int energy, int whiffles)
+int savePlayer(int MAX, int xCoord, int yCoord, int energy, int whiffles)
 {
 	// file variables
-	char * USER = "Save_Player_TeamG.txt";
-	FILE * fileUser = fopen(USER,"w");
-	
-	// check if file can be opened
-	if(fileUser == NULL)
-	{
-		printf("Error opening %s\n", USER);
-		return 0;
-	}
+	FILE * fileUser = fopen("Save_Player_TeamG.txt","w");
 	
 	// write player data to file
-	fprintf(fileUser, "%s %s\n", xCoord, yCoord);
-	fprintf(fileUser, "%s\n%s\n", energy, whiffles);
+	fprintf(fileUser, "%d\n%d\n%d\n%d\n%d", MAX, xCoord, yCoord, energy, whiffles);
 	
 	return fclose(fileUser);
 }
