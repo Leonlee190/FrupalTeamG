@@ -42,7 +42,7 @@ void initializeMap(int size, struct map* inMap) {
 
 	for(int x = 0; x < size; ++x)
 		for (int y = 0; y < size; ++y) {
-			struct cell temp = makeCell(x, y, "0", '0' , "None");
+			struct cell temp = makeCell(x, y, 0, '0' , "None");
 			inMap->cells[x][y] = temp;
 		}
 }
