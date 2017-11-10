@@ -13,12 +13,13 @@ struct cell {
 };
 
 //creates a cell, constructor essentially, but because C doesn't have constructors, i need to define it outside of the struct
-struct cell makeCell(int x, int y, const char* visibility, char land, const char* inItem) {
+struct cell makeCell(int x, int y, int visibility, char land, const char* inItem) {
 	struct cell retVal;
 
 	retVal.xCoord = x;
 	retVal.yCoord = y;
-	retVal.isVisible = atoi(visibility);
+	retVal.isVisible = visibility;
+	retVal.terrain = land;
 
 	strcpy(retVal.item, inItem);
 
@@ -82,7 +83,7 @@ struct map makeMap(char* filename) {
 	while (fgets(line, sizeof(line), inFile)) {
 		//we don't care about the first line, just the second and then after the #'s
 		if (lineCount == 0) {
-			lineCount++;
+			++lineCount;
 			continue;
 		}
 		//dimensions line
@@ -96,7 +97,7 @@ struct map makeMap(char* filename) {
         }
         //check if we hit a delimiter, if we do, iterate the count then keep going
 		if (line[0] == '#') {
-			delimitersSeen++;
+			++delimitersSeen;
 			continue;
 		}
 
@@ -111,31 +112,31 @@ struct map makeMap(char* filename) {
 				case 0:
 					//xCoord
 					temp.xCoord = atoi(tmp);
-					fieldCount++;
+					++fieldCount;
 					tmp = strtok(NULL, ",");
 					continue;
 				case 1:
 					//yCoord
 					temp.yCoord = atoi(tmp);
-					fieldCount++;
+					++fieldCount;
 					tmp = strtok(NULL, ",");
 					continue;
 				case 2:
 					//visibility
 					temp.isVisible = atoi(tmp);
-					fieldCount++;
+					++fieldCount;
 					tmp = strtok(NULL, ",");
 					continue;
 				case 3:
 					//terrain
 					temp.terrain = tmp[0];
-					fieldCount++;
+					++fieldCount;
 					tmp = strtok(NULL, ",");
 					continue;
 				case 4:
 					//item
 					strcpy(temp.item, tmp);
-					fieldCount++;
+					++fieldCount;
 					tmp = strtok(NULL, ",");
 					continue;
 				case 5:
