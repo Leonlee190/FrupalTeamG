@@ -1,8 +1,9 @@
-#include "save.h";
+#include "save.h"
 
 // return 0 if successful
 int savePlayer(int size, int xCoord, int yCoord, int energy, int whiffles)
 {
+	printf("enter savePlayer");
 	// file variables
 	char * USER = "Save_Player_TeamG.txt";
 	FILE * fileUser = fopen(USER,"w");
@@ -13,9 +14,10 @@ int savePlayer(int size, int xCoord, int yCoord, int energy, int whiffles)
 		return 0;
 	}
 	// write player data to file
-	fprintf(fileUser, "%s\n%s\n%s\n", size, xCoord, yCoord);
-	fprintf(fileUser, "%s\n%s\n", energy, whiffles);
+	fprintf(fileUser, "%d\n%d\n%d\n", size, xCoord, yCoord);
+	fprintf(fileUser, "%d\n%d\n", energy, whiffles);
 	
+	printf("exit savePlayer");
 	return fclose(fileUser);
 }
 
@@ -79,6 +81,7 @@ int saveI_help(char * fName, int itemName, int itemNum)
 // return 0 if successful
 int saveInventory(int * bag, int length)
 {
+	printf("Enter saveInventory");
 	// file variables
 	char * BAG = "Save_Inventory_TeamG.txt";
 	FILE * fileBag = fopen(BAG,"w");
@@ -97,6 +100,7 @@ int saveInventory(int * bag, int length)
 		//success += saveI_help(BAG, i, bag[i]);
 		fprintf(fileBag, "%d\n", bag[i]);
 	}
+	printf("Exit saveInventory");
 	return fclose(fileBag);
 	//return success;
 }
@@ -104,6 +108,7 @@ int saveInventory(int * bag, int length)
 // return 0 if successful
 int saveMap(int size, char * cellData)
 {
+	printf("Enter saveMap");
 	// file variables
 	char * MAP = "Save_MapCells_TeamG.txt";
 	FILE * fileMap = fopen(MAP,"w");
@@ -116,6 +121,7 @@ int saveMap(int size, char * cellData)
 	// write cell data block to map save file
 	fprintf(fileMap, "%d\n%s", size, cellData);
 	
+	printf("Exit saveMap");
 	return fclose(fileMap);
 }
 
@@ -139,15 +145,16 @@ int updateMap()
 // load save files with original map file
 int loadSave()
 {
+	printf("Enter loadSave");
 	// hardcode mape file name
 	FILE * fileMap = fopen("map.txt","r");
-	char line[101];
+	char line[101] = {};
 	char size[11];
 	char * xCoord;
 	char * yCoord;
 	char energy[11];
 	char whiffles[11];
-	int * inventory[11];
+	int inventory[11];
 	// use a strcat to hold the bottom half of original file to save as map file
 	// each line in map save file has format x,y,1/0,#,item name
 	char cellInfo[101];
@@ -166,49 +173,49 @@ int loadSave()
 	xCoord = strtok(line, ",");
 	yCoord = strtok(NULL, ",");
 	fgets(energy, 11, fileMap);		// Player energy
-	fgets(whiffles, 11, fileMap);	// Player whiffles
+	fgets(whiffles, 11, fileMap);		// Player whiffles
 	// end savePlayer file
 	// saveInventory file - hardcode switch statement using strcmp
 	fgets(line, 101, fileMap);
 	while(strchr(line,'#') == NULL)
 	{
-		if(strcmp(line,"Hatchet") == 0)
+		if(strcmp(line,"Hatchet\n") == 0)
 		{
 			++inventory[0];
 		}
-		else if(strcmp(line,"Axe") == 0)
+		else if(strcmp(line,"Axe\n") == 0)
 		{
 			++inventory[1];
 		}
-		else if(strcmp(line,"Chainsaw") == 0)
+		else if(strcmp(line,"Chainsaw\n") == 0)
 		{
 			++inventory[2];
 		}
-		else if(strcmp(line,"Chisel") == 0)
+		else if(strcmp(line,"Chisel\n") == 0)
 		{
 			++inventory[3];
 		}
-		else if(strcmp(line,"Sledge") == 0)
+		else if(strcmp(line,"Sledge\n") == 0)
 		{
 			++inventory[4];
 		}
-		else if(strcmp(line,"Jackhammer") == 0)
+		else if(strcmp(line,"Jackhammer\n") == 0)
 		{
 			++inventory[5];
 		}
-		else if(strcmp(line,"Machete") == 0)
+		else if(strcmp(line,"Machete\n") == 0)
 		{
 			++inventory[6];
 		}
-		else if(strcmp(line,"Shears") == 0)
+		else if(strcmp(line,"Shears\n") == 0)
 		{
 			++inventory[7];
 		}
-		else if(strcmp(line,"Binoculars") == 0)
+		else if(strcmp(line,"Binoculars\n") == 0)
 		{
 			++inventory[8];
 		}
-		else if(strcmp(line,"Pretty Rock") == 0)
+		else if(strcmp(line,"Pretty Rock\n") == 0)
 		{
 			++inventory[9];
 		}
@@ -216,12 +223,12 @@ int loadSave()
 		{
 			++inventory[10];
 		}
+		fgets(line, 101, fileMap);
 	}
 	// end saveInventory - line contains '#'
 	// saveMap file
 	fgets(cellInfo, 101, fileMap); // hold first cell's properties
-	fgets(line, 101, fileMap);
-	while(line != EOF)
+	while(fgets(line, 101, fileMap) != NULL)
 	{
 		strcat(cellInfo,line);
 	}
@@ -231,4 +238,5 @@ int loadSave()
 	savePlayer(atoi(size),atoi(xCoord),atoi(yCoord),atoi(energy),atoi(whiffles));
 	saveInventory(inventory,11);
 	saveMap(atoi(size),cellInfo);
+	printf("Exit loadSave");
 }
