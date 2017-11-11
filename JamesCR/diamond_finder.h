@@ -14,5 +14,6 @@ int x_diamond;
 int y_diamond;
 
 int onDiamond(int x, int y);
+int pull_diamond();
 
 #endif
