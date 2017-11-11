@@ -13,7 +13,7 @@ struct cell {
 };
 
 //creates a cell, constructor essentially, but because C doesn't have constructors, i need to define it outside of the struct
-struct cell makeCell(int x, int y, int visibility, char land, const char* inItem) {
+struct cell makeCell(int x, int y, int visibility, int land, const char* inItem) {
 	struct cell retVal;
 
 	retVal.xCoord = x;
@@ -29,11 +29,14 @@ struct cell makeCell(int x, int y, int visibility, char land, const char* inItem
 struct map {
 	int dimensions;
 	struct cell** cells;
+    int rdX, rdY;
+    int loaded;
 };
 
 //allocates memory for the map, then initializes all cells to be empty and invisible
 void initializeMap(int size, struct map* inMap) {
 	inMap->dimensions = size;
+    inMap->loaded = 0;
 
 	inMap->cells = malloc(size * sizeof(struct cell*));
 
@@ -42,7 +45,7 @@ void initializeMap(int size, struct map* inMap) {
 
 	for(int x = 0; x < size; ++x)
 		for (int y = 0; y < size; ++y) {
-			struct cell temp = makeCell(x, y, 0, '0' , "None");
+			struct cell temp = makeCell(x, y, 0, 0 , "None");
 			inMap->cells[x][y] = temp;
 		}
 }
@@ -57,15 +60,15 @@ void deallocateMap(int size, struct map* inMap) {
 	free(inMap->cells);
 }
 
-//debug function to validate all files end up in the right spot
-void printMap(int size, struct map* inMap) {
+//debug function to validate all files end up in the right spot, shouldn't ever be called in actual game routine
+void printMap(int size, struct map inMap) {
 	for (int x = 0; x < size; ++x) {
 		for (int y = 0; y < size; ++y){
 			printf("%d,", inMap->cells[x][y].xCoord);
 			printf("%d,", inMap->cells[x][y].yCoord);
 			printf("%d,", inMap->cells[x][y].isVisible);
-			printf("%c,", inMap->cells[x][y].terrain);
-			printf("%s,    ", inMap->cells[x][y].item);
+			printf("%d,", inMap->cells[x][y].terrain);
+			printf("%s,", inMap->cells[x][y].item);
 		}
 		printf("\n");
 	}
@@ -77,15 +80,10 @@ struct map makeMap(char* filename) {
 	FILE* inFile;
 	inFile = fopen(filename, "r");
 	char line[64];
-	int lineCount = 0, delimitersSeen = 0;
+	int lineCount = 1;
 
 	//do operations line by line
 	while (fgets(line, sizeof(line), inFile)) {
-		//we don't care about the first line, just the second and then after the #'s
-		if (lineCount == 0) {
-			++lineCount;
-			continue;
-		}
 		//dimensions line
 		if (lineCount == 1) {
 			++lineCount;
@@ -95,14 +93,8 @@ struct map makeMap(char* filename) {
 			initializeMap(dimensions, &retMap);
             continue;
         }
-        //check if we hit a delimiter, if we do, iterate the count then keep going
-		if (line[0] == '#') {
-			++delimitersSeen;
-			continue;
-		}
-
-		//once we see two delimiter lines, we know we're at explicitly mentioned map cells
-		if (delimitersSeen == 2) {
+		//all other lines are mentioned map cells
+		if (lineCount >= 2) {
 			char* tmp = strtok(line, ",");
 			int fieldCount = 0;
 			struct cell temp;
@@ -111,32 +103,50 @@ struct map makeMap(char* filename) {
 				switch (fieldCount) {
 				case 0:
 					//xCoord
-					temp.xCoord = atoi(tmp);
-					++fieldCount;
+                    ++fieldCount;
+                    int x = atoi(tmp);
+                    if(x > retMap.dimensions - 1)
+					    return retMap;
+                    else
+                        temp.xCoord = x;
 					tmp = strtok(NULL, ",");
 					continue;
 				case 1:
 					//yCoord
-					temp.yCoord = atoi(tmp);
-					++fieldCount;
+                    ++fieldCount;
+                    int y = atoi(tmp);
+                    if(y > retMap.dimensions - 1)
+                        return retMap;
+                    else
+                        temp.yCoord = y;
 					tmp = strtok(NULL, ",");
 					continue;
 				case 2:
 					//visibility
-					temp.isVisible = atoi(tmp);
-					++fieldCount;
-					tmp = strtok(NULL, ",");
+                    ++fieldCount;
+					if(atoi(tmp) != 1)
+                        temp.isVisible = 0;
+                    else
+                        temp.isVisible = 1;
+                    tmp = strtok(NULL, ",");
 					continue;
 				case 3:
 					//terrain
-					temp.terrain = tmp[0];
-					++fieldCount;
-					tmp = strtok(NULL, ",");
+                    ++fieldCount;
+					if(atoi(tmp) > 5)
+                        temp.terrain = 0;
+                    else
+                        temp.terrain = atoi(tmp);
+                    tmp = strtok(NULL, ",");
 					continue;
 				case 4:
 					//item
+                    ++fieldCount;
+                    if(strcmp(tmp, "Royal Diamonds") == 0){
+                        retMap.rdX = temp.xCoord;
+                        retMap.rdY = temp.yCoord;
+                    }
 					strcpy(temp.item, tmp);
-					++fieldCount;
 					tmp = strtok(NULL, ",");
 					continue;
 				case 5:
@@ -146,9 +156,10 @@ struct map makeMap(char* filename) {
 
 			//push the newly made cell to the array
 			retMap.cells[temp.xCoord][temp.yCoord] = temp;
-		}//end if for delimiter lines = 2
+		}//end main routine
 	}
-
+    //if we get here, the map is fully loaded with no issues
+    retMap.loaded = 1;
     fclose(inFile);
 	return retMap;
 }
