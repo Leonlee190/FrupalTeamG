@@ -6,7 +6,7 @@ input from the movement.c file, hopefully
 x = x value of the player
 y = y value of the player
 */
-int onDiamond(int x, int y, map inMap)
+int onDiamond(int x, int y, struct map inMap)
 {
 	if(x == inMap.rdX && y == inMap.rdY) return 1; //return a success if the x and y variables match with the Diamonds 
 	return 0; //auto return a failure state if they do not match.

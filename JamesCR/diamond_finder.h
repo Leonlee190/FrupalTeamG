@@ -11,5 +11,5 @@ int pull_info_diamond(int x_gem, int y_gem);
 int onDiamond(int gem_x, int gem_y, int user_x, int user_y)
 */;
 
-int onDiamond(int x, int y, map inMap);
+int onDiamond(int x, int y, struct map inMap);
 #endif
