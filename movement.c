@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <cgi.h>
+#include <time.h>
 
 char getting[1];
 char input;
@@ -10,6 +11,9 @@ s_cgi *cgi;
 
 int main(){
     printf("Content-Type: text/html;charset=us-ascii\n\n");
+
+    srand(time(NULL));
+    int terrain = rand() % 6;
 
     int MAX;
     int cx, cy, fx, fy;
@@ -112,6 +116,38 @@ int main(){
     else{
         fx = cx;
         fy = cy;
+        --energy;
+    }
+
+    if(terrain == 0){
+        printf("<br>Walking through Meadow<br><br>");
+        avail = 1;
+    }
+
+    if(terrain == 1){
+        printf("<br>Walking through Forrest<br><br>");
+        avail = 1;
+    }
+
+    if(terrain == 2){
+        printf("<br>Can't walk on water...<br><br>");
+        avail = 0;
+    }
+
+    if(terrain == 3){
+        printf("<br>Can't walk through walls...<br><br>");
+        avail = 0;
+    }
+
+    if(terrain == 4){
+        printf("<br>Walked through bog so lost additional energy<br><br>");
+        avail = 1;
+        --energy;
+    }
+
+    if(terrain == 5){
+        printf("<br>Walked through swamp so lost additional energy<br><br>");
+        avail = 1;
         --energy;
     }
 
