@@ -12,9 +12,9 @@ int main(){
     printf("Content-Type: text/html;charset=us-ascii\n\n");
 
     int MAX;
-    int cx, cy;
-    int energy;
-    int whiffles;
+    int cx, cy, fx, fy;
+    int energy, whiffles;
+    int avail = 1;
 
     FILE *fp;
     int i = 0, k = 0;
@@ -59,52 +59,70 @@ int main(){
 
     if(input == 'N'){
         if(cy < (MAX - 1)){
-            ++cy;
+            fx = cx;
+            fy = cy + 1;
             --energy;
         }
         else if(cy == (MAX - 1)){
-            cy = 0;
+            fx = cx;
+            fy = 0;
             --energy;
         }
     }
 
     else if(input == 'S'){
         if(cy > 0){
-            --cy;
+            fx = cx;
+            fy = cy - 1;
             --energy;
         }
         else if(cy == 0){
-            cy = (MAX - 1);
+            fx = cx;
+            fy = (MAX - 1);
             --energy;
         }
     }
 
     else if(input == 'E'){
         if(cx < (MAX - 1)){
-            ++cx;
+            fy = cy;
+            fx = cx + 1;
             --energy;
         }
         else if(cx == (MAX - 1)){
-            cx = 0;
+            fy = cy;
+            fx = 0;
             --energy;
         }
     }
 
     else if(input == 'W'){
         if(cx > 0){
-            --cx;
+            fy = cy;
+            fx = cx - 1;
             --energy;
         }
         else if(cx == 0){
-            cx = (MAX - 1);
+            fy = cy;
+            fx = (MAX - 1);
             --energy;
         }
     }
 
     else{
+        fx = cx;
+        fy = cy;
+        --energy;
+    }
+
+    if(avail){
+        cx = fx;
+        cy = fy;
+    }
+
+    else if(!avail){
         cx = cx;
         cy = cy;
-        --energy;
     }
 
     fp = fopen("Save_Player_TeamG.txt", "w");
