@@ -57,7 +57,7 @@ int main(){
 
     input = getting[0];
 
-    if(input == 'N'){
+    if(input == 'N' || input == 'w' || input == 'W'){
         if(cy < (MAX - 1)){
             fx = cx;
             fy = cy + 1;
@@ -70,7 +70,7 @@ int main(){
         }
     }
 
-    else if(input == 'S'){
+    else if(input == 'S' || input == 's'){
         if(cy > 0){
             fx = cx;
             fy = cy - 1;
@@ -83,7 +83,7 @@ int main(){
         }
     }
 
-    else if(input == 'E'){
+    else if(input == 'E' || input == 'd' || input == 'D'){
         if(cx < (MAX - 1)){
             fy = cy;
             fx = cx + 1;
@@ -96,7 +96,7 @@ int main(){
         }
     }
 
-    else if(input == 'W'){
+    else if(input == 'W' || input == 'a' || input == 'A'){
         if(cx > 0){
             fy = cy;
             fx = cx - 1;
