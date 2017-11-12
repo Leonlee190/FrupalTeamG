@@ -11,9 +11,45 @@ s_cgi *cgi;
 int main(){
     printf("Content-Type: text/html;charset=us-ascii\n\n");
 
-    int MAXx = 128, MAXy = 128;
-    int Currentx = 127, Currenty = 127;
-    int Energy = 10;
+    int MAX;
+    int cx, cy;
+    int energy;
+    int whiffles;
+
+    FILE *fp;
+    int i = 0, k = 0;
+    char getter[10];
+    char single;
+
+    fp = fopen("Save_Player_TeamG.txt", "r");
+
+    single = fgetc(fp);
+
+    while(single != EOF){
+        while(single != '\n'){
+            getter[i] = single;
+            single = fgetc(fp);
+            ++i;
+        }
+        getter[i] = '\0';
+
+        i = 0;
+
+        if(k == 0)
+            MAX = atoi(getter);
+        else if(k == 1)
+            cx = atoi(getter);
+        else if(k == 2)
+            cy = atoi(getter);
+        else if(k == 3)
+            energy = atoi(getter);
+        else if(k == 4)
+            whiffles = atoi(getter);
+        single = fgetc(fp);
+        ++k;
+    }
+
+    fclose(fp);
 
     cgi = cgiInit();
 
@@ -22,56 +58,60 @@ int main(){
     input = getting[0];
 
     if(input == 'N'){
-        if(Currenty < (MAXy - 1)){
-            ++Currenty;
-            --Energy;
+        if(cy < (MAX - 1)){
+            ++cy;
+            --energy;
         }
-        else if(Currenty == (MAXy - 1)){
-            Currenty = 0;
-            --Energy;
+        else if(cy == (MAX - 1)){
+            cy = 0;
+            --energy;
         }
     }
 
     else if(input == 'S'){
-        if(Currenty > 0){
-            --Currenty;
-            --Energy;
+        if(cy > 0){
+            --cy;
+            --energy;
         }
-        else if(Currenty == 0){
-            Currenty = (MAXy - 1);
-            --Energy;
+        else if(cy == 0){
+            cy = (MAX - 1);
+            --energy;
         }
     }
 
     else if(input == 'E'){
-        if(Currentx < (MAXx - 1)){
-            ++Currentx;
-            --Energy;
+        if(cx < (MAX - 1)){
+            ++cx;
+            --energy;
         }
-        else if(Currentx == (MAXx - 1)){
-            Currentx = 0;
-            --Energy;
+        else if(cx == (MAX - 1)){
+            cx = 0;
+            --energy;
         }
     }
 
     else if(input == 'W'){
-        if(Currentx > 0){
-            --Currentx;
-            --Energy;
+        if(cx > 0){
+            --cx;
+            --energy;
         }
-        else if(Currentx == 0){
-            Currentx = (MAXx - 1);
-            --Energy;
+        else if(cx == 0){
+            cx = (MAX - 1);
+            --energy;
         }
     }
 
     else{
-        Currentx = Currentx;
-        Currenty = Currenty;
-        --Energy;
+        cx = cx;
+        cy = cy;
+        --energy;
     }
 
-    printf("Cordinate<br>X: %d<br>Y: %d<br>Energy: %d\n\n", Currentx, Currenty, Energy);
+    fp = fopen("Save_Player_TeamG.txt", "w");
+    fprintf(fp,"%d\n%d\n%d\n%d\n%d\n", MAX, cx, cy, energy, whiffles);
+    fclose(fp);
+
+    printf("User Location: (%d, %d)<br>Energy: %d<br>Whiffles: %d<br>", cx, cy, energy, whiffles);
 
     return 0;
 }
