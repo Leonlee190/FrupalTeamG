@@ -1,0 +1,14 @@
+<html>
+
+	<script>
+		function gotDiamond()
+		{
+			var xhttp = new XMLHttpRequest();
+			URL = "diamond.cgi"; //change this to movement.cgi after change
+			xhttp.open("GET",URL,false);
+			xhttp.send();
+			alert(xhttp.responseText);
+		}
+	</script>
+
+</html>
