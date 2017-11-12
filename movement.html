@@ -1,0 +1,83 @@
+<html>
+
+<style>
+
+div.d1{
+    width: 300px;
+    padding: 30px;
+    border-style: groove;
+}
+
+div.d2{
+    margin: 80px;
+    width: 300px;
+    padding: 50px;
+    box-sizing: border-box;
+    border-style: groove;
+}
+
+</style>
+
+<script>
+
+function direction(str){
+    arguments = "dir="+str;
+    var xhttp = new XMLHttpRequest();
+    URL = "movement.cgi?"+arguments;
+    
+    xhttp.open("GET",URL,false);
+    xhttp.send();
+    //alert(xhttp.responseText);
+    document.getElementById("Player_info").innerHTML = xhttp.responseText;
+}
+
+function show_item(){
+    var element = document.getElementById("Item_info");
+    element.style.visibility = "visible";
+}
+
+function hide_item(){
+    var element = document.getElementById("Item_info");
+    element.style.visibility = "hidden";
+}
+
+</script>
+
+<head>
+
+<h1>Frugal? Land? Huh?</h1>
+
+</head>
+
+<body>
+
+<div class="d2">
+
+&emsp;&emsp;&emsp;&emsp;<input type="button" name="dir" onclick="direction('N')" value="North">
+<br><br>
+
+<input type="button" name="dir" onclick="direction('W')" value="West">
+&emsp;&emsp;&emsp;&emsp;&emsp;<input type="button" name="dir" onclick="direction('E')" value="East">
+
+<br><br>
+&emsp;&emsp;&emsp;&emsp;<input type="button" name="dir" onclick="direction('S')" value="South">
+
+<br></div>
+
+<div class="d1"  id="Player_info">
+
+Player Data
+
+</div>
+
+<br><br>
+
+<input type="button" onclick="show_item()"  value="Item List On">
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<input type="button" onclick="hide_item()"  value="Item List Off">
+<div class="d1" id="Item_info">
+Item Inventory
+</div>
+
+</body>
+
+</html>
