@@ -3,9 +3,9 @@
 #include <string.h>
 
 enum item{hatchet = 0, axe = 1, chainsaw = 2, chisel = 3, sledge = 4,
-  jackhammer = 5, machete = 6, shears = 7};
+  jackhammer = 5, machete = 6, shears = 7, binoculars = 8};
 
-int inventory[8];
+int inventory[9];
 
 int main(void)
 {
@@ -19,5 +19,6 @@ int main(void)
   printf("Jackhammers - 100Wh   (%d)</br>", inventory[jackhammer]);
   printf("Machetes - 25Wh   (%d)</br>", inventory[machete]);
   printf("Shears - 35Wh   (%d)</br>", inventory[shears]);
+  printf("Biconulars - ?Wh   (%d)</br>", inventory[binoculars]);
   return 0;
 }
