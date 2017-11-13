@@ -24,7 +24,7 @@ function direction(str){
     arguments = "dir="+str;
     var xhttp = new XMLHttpRequest();
     URL = "movement.cgi?"+arguments;
-    
+
     xhttp.open("GET",URL,false);
     xhttp.send();
     //alert(xhttp.responseText);
@@ -45,14 +45,35 @@ function keyEntry(event){
     document.getElementById("Player_info").innerHTML = xhttp.responseText;
 }
 
-function show_item(){
-    var element = document.getElementById("Item_info");
-    element.style.visibility = "visible";
+function getInventory()
+{
+	var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+                if(this.readyState == 4 && this.status == 200)
+                {
+                document.getElementById("inventoryView").innerHTML =
+                this.responseText;
+                }
+        };
+        xhttp.open("GET", "test.cgi", false);
+        xhttp.send();
 }
 
-function hide_item(){
-    var element = document.getElementById("Item_info");
-    element.style.visibility = "hidden";
+function toggleInventory()
+{
+	getInventory();
+	var inv = document.getElementById("inventoryView");
+	var invTogg = document.getElementById("invToggle");
+	if(inv.style.visibility == "hidden")
+	{
+	inv.style.visibility = "visible";
+	invTogg.value = "Hide inventory";
+	}
+	else
+	{
+	inv.style.visibility = "hidden";
+	invTogg.value = "Show inventory";
+	}
 }
 
 </script>
@@ -90,10 +111,13 @@ Player Data
 
 <br><br>
 
-<input type="button" onclick="show_item()"  value="Item List On">
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<input type="button" onclick="hide_item()"  value="Item List Off">
-<div class="d1" id="Item_info">
-Item Inventory
+<form>
+
+  <input type="button" value="Show inventory" id="invToggle" onclick="toggleInventory()" \>
+
+</form>
+<div id="inventoryView" style="visibility:hidden">
+
 </div>
 
 </body>
