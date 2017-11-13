@@ -6,6 +6,7 @@
 
 //This code is to display the alert for finding the royal diamonds.
 //needs to be added to the movement.c file to run properly
+//Remember to change <MAP_NAME> to whatever the map's name is!
 
 int main(void)
 {
