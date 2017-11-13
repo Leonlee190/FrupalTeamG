@@ -60,15 +60,15 @@ void deallocateMap(int size, struct map* inMap) {
 	free(inMap->cells);
 }
 
-//debug function to validate all files end up in the right spot, shouldn't ever be called in actual game routine
-void printMap(int size, struct map inMap) {
+//debug function to validate all files end up in the right spot
+void printMap(int size, struct map* inMap) {
 	for (int x = 0; x < size; ++x) {
 		for (int y = 0; y < size; ++y){
 			printf("%d,", inMap->cells[x][y].xCoord);
 			printf("%d,", inMap->cells[x][y].yCoord);
 			printf("%d,", inMap->cells[x][y].isVisible);
 			printf("%d,", inMap->cells[x][y].terrain);
-			printf("%s,", inMap->cells[x][y].item);
+			printf("%s, ", inMap->cells[x][y].item);
 		}
 		printf("\n");
 	}
