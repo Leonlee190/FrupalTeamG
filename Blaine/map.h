@@ -144,7 +144,7 @@ struct map makeMap(char* filename) {
 				case 4:
 					//item
 					++fieldCount;
-					if(strcmp(tmp, "Royal Diamonds") == 0){
+					if(strcmp(tmp, "Royal Diamonds\n") == 0){
 						retMap.rdX = temp.xCoord;
 						retMap.rdY = temp.yCoord;
 					}
