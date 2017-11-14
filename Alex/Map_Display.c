@@ -22,6 +22,9 @@ s_cgi *cgi;     //Define a pointer of type s_cgi, call it cgi
     //Chisel, Sledge, Jackhammer, Machete, Shears, Binoculars, None
     //Default set to None
 
+const int PLAYER_X = 2;
+const int PLAYER_Y = 1;
+
 void main(void){
     printf("Content-Type: text/html;charset=us-ascii\n\n");
     struct map gameMap = makeMap("alex_test_map.txt");
@@ -30,7 +33,7 @@ void main(void){
     printf("    <input type='submit' value='run cgi'>");
     printf("</form>");
     */
-    setVisible(2, 4, gameMap);
+    setVisible(PLAYER_X, PLAYER_Y, gameMap);
     drawMap(gameMap);
 }
 
@@ -73,6 +76,7 @@ void drawMap(struct map updMap){
     printf("            float:left;\n");
     printf("            outline:none !important;}\n");
     printf("        .object{\n");
+    printf("            margin-top:-32px;\n");
     printf("            position:relative;\n");
     printf("            width:32px;\n");
     printf("            height:32px;\n");
@@ -90,6 +94,7 @@ void drawMap(struct map updMap){
    // printf("            right:0;\n");
    // printf("            position:relative;}\n");
     printf("        #player{\n");
+    printf("            margin-top:-32px;\n");
     printf("            position:relative;\n");
     printf("            z-index:3;}\n");
     printf("    </style>\n");
@@ -167,7 +172,7 @@ void drawMap(struct map updMap){
 bool comparePlayerToCoor(int cellX, int cellY){
     //STUB
     bool here = false;
-    if(cellX == 2 && cellY == 4)
+    if(cellX == PLAYER_X && cellY == PLAYER_Y)
         here = true;
     return here;
 }
