@@ -1,9 +1,13 @@
+/* ***********************
+/  Fruple Program
+/  Team G - Millen Wan
+/  Save state functions
+  ************************/
 #include "save.h"
 
 // return 0 if successful
 int savePlayer(int size, int xCoord, int yCoord, int energy, int whiffles)
 {
-	printf("enter savePlayer");
 	// file variables
 	char * USER = "Save_Player_TeamG.txt";
 	FILE * fileUser = fopen(USER,"w");
@@ -11,104 +15,39 @@ int savePlayer(int size, int xCoord, int yCoord, int energy, int whiffles)
 	if(fileUser == NULL)
 	{
 		printf("Error opening %s\n", USER);
-		return 0;
+		return 1;
 	}
 	// write player data to file
 	fprintf(fileUser, "%d\n%d\n%d\n", size, xCoord, yCoord);
 	fprintf(fileUser, "%d\n%d\n", energy, whiffles);
 	
-	printf("exit savePlayer");
 	return fclose(fileUser);
 }
 
-// helper function for saveInventory below
-// return 0 if successful
-/*
-int saveI_help(char * fName, int itemName, int itemNum)
-{
-	// local variable to append to file
-	char * name = NULL;
-	FILE * fileBag = fopen(fName,"a");
-	// check if file can be opened
-	if(fileBag == NULL)
-	{
-		printf("Error opening %s\n", fName);
-		return 1;
-	}
-	
-	// hardcode item names to array values
-	switch(itemName)
-	{
-		case 0:
-			name = "Hatchet";
-			break;
-		case 1:
-			name = "Axe";
-			break;
-		case 2:
-			name = "Chainsaw";
-			break;
-		case 3:
-			name = "Chisel";
-			break;
-		case 4:
-			name = "Sledge";
-			break;
-		case 5:
-			name = "Jackhammer";
-			break;
-		case 6:
-			name = "Machete";
-			break;
-		case 7:
-			name = "Shears";
-			break;
-		case 8:
-			name = "Binoculars";
-			break;
-		case 9:
-			name = "Pretty Rock";
-			break;
-	}
-	// write item name # times to file
-	for(int i = 0; i<itemNum; ++i)
-	{
-		fprintf(fileBag, "%s\n", name);
-	}
-	
-	return fclose(fileBag);
-}*/
 // return 0 if successful
 int saveInventory(int * bag, int length)
 {
-	printf("Enter saveInventory");
 	// file variables
 	char * BAG = "Save_Inventory_TeamG.txt";
 	FILE * fileBag = fopen(BAG,"w");
-	//int success = 0;
 	// check if file can be opened
 	if(fileBag == NULL)
 	{
 		printf("Error opening %s\n", BAG);
 		return 1;
 	}
-	// cleared file for new write
-	//fclose(fileBag);
 	// write items in inventory to file
 	for(int i = 0; i < length; ++i)
 	{
-		//success += saveI_help(BAG, i, bag[i]);
 		fprintf(fileBag, "%d\n", bag[i]);
 	}
-	printf("Exit saveInventory");
+
 	return fclose(fileBag);
-	//return success;
 }
 
 // return 0 if successful
 int saveMap(int size, char * cellData)
 {
-	printf("Enter saveMap");
 	// file variables
 	char * MAP = "Save_MapCells_TeamG.txt";
 	FILE * fileMap = fopen(MAP,"w");
@@ -116,18 +55,17 @@ int saveMap(int size, char * cellData)
 	if(fileMap == NULL)
 	{
 		printf("Error opening %s\n", MAP);
-		return 0;
+		return 1;
 	}
 	// write cell data block to map save file
 	fprintf(fileMap, "%d\n%s", size, cellData);
 	
-	printf("Exit saveMap");
 	return fclose(fileMap);
 }
 
 // update map file with new visible cells and used items
-// return 0 if successful - inProgress
-int updateMap()
+// return 0 if successful
+int updateMap(int xC, int yC, int vision, struct map * mapCells)
 {
 	// file variables
 	char * MAP = "Save_MapCells_TeamG.txt";
@@ -136,47 +74,75 @@ int updateMap()
 	if(fileMap == NULL)
 	{
 		printf("Error opening %s\n", MAP);
-		return 0;
+		return 1;
+	}
+	// loop through map cells with nested for
+	for(int i = 0; i < mapCells->dimensions; ++i)
+	{
+		for(int j = 0; j < mapCells->dimensions; ++j)
+		{
+			struct cell current = mapCells->cells[i][j];
+			// update cell visibility if within vision
+			if(i >= (xC-vision) && i <= (xC+vision) && j >= (yC-vision) && j <=(yC+vision))
+			{
+				current.isVisible = 1;
+			}
+			// print cell to file if not "blank" cell
+			if(current.isVisible == 0 && current.terrain == 0 && strcmp(current.item,"None") == 0)
+			{
+				// ordinary cell
+			}
+			else
+			{
+				fprintf(fileMap, "%d,%d,%d,%d,%s\n", current.xCoord,current.yCoord,current.isVisible,current.terrain,current.item);
+			}
+		}
 	}
 	
 	return fclose(fileMap);
 }
 
 // load save files with original map file
+// return 0 on successful load of all save files
 int loadSave()
 {
-	printf("Enter loadSave");
 	// hardcode mape file name
 	FILE * fileMap = fopen("map.txt","r");
-	char line[101] = {};
-	char size[11];
-	char * xCoord;
-	char * yCoord;
-	char energy[11];
-	char whiffles[11];
-	int inventory[11];
+	int MAX = 31; 		// file line read length
+	int COUNT = 11;		// inventory size & smaller input length
+	char line[MAX];		// file read line
+	char size[COUNT];	// map dimension
+	int xC;			// current player coordinates
+	int yC;
+	char energy[COUNT];	// current player energy
+	char whiffles[COUNT];	// current player whiffles
+	int inventory[COUNT];	// current inventory count
+	// initialize inventory
+	for(int i = 0; i<COUNT; ++i)
+	{
+		inventory[i] = 0;
+	}
 	// use a strcat to hold the bottom half of original file to save as map file
-	// each line in map save file has format x,y,1/0,#,item name
-	char cellInfo[101];
+	char cellInfo[MAX*sizeof(size)];	// buffer to hold all map cells information
 	// check if file can be read
 	if(fileMap == NULL)
 	{
 		printf("Error opening map file.");
-		return 0;
+		return 1;
 	}
 	// parse file assuming correct formatting followed - no error checking
 	// savePlayer file
-	fgets(line, 101, fileMap); 		// Map file title
-	fgets(size, 11, fileMap); 		// Map dimension
-	fgets(line, 101, fileMap); 		// Map file format break
-	fgets(line, 101, fileMap); 		// Player coordinates - split below
-	xCoord = strtok(line, ",");
-	yCoord = strtok(NULL, ",");
-	fgets(energy, 11, fileMap);		// Player energy
-	fgets(whiffles, 11, fileMap);		// Player whiffles
+	fgets(line, MAX, fileMap); 		// Map file title
+	fgets(size, COUNT, fileMap); 		// Map dimension
+	fgets(line, MAX, fileMap); 		// Map file format break
+	fgets(line, MAX, fileMap); 		// Player coordinates - split below
+	xC = atoi(strtok(line, ","));
+	yC = atoi(strtok(NULL, ","));
+	fgets(energy, COUNT, fileMap);		// Player energy
+	fgets(whiffles, COUNT, fileMap);	// Player whiffles
 	// end savePlayer file
 	// saveInventory file - hardcode switch statement using strcmp
-	fgets(line, 101, fileMap);
+	fgets(line, MAX, fileMap);
 	while(strchr(line,'#') == NULL)
 	{
 		if(strcmp(line,"Hatchet\n") == 0)
@@ -223,20 +189,20 @@ int loadSave()
 		{
 			++inventory[10];
 		}
-		fgets(line, 101, fileMap);
+		fgets(line, MAX, fileMap);	// grab next item or delimiter
 	}
 	// end saveInventory - line contains '#'
 	// saveMap file
-	fgets(cellInfo, 101, fileMap); // hold first cell's properties
-	while(fgets(line, 101, fileMap) != NULL)
+	fgets(cellInfo, MAX, fileMap); // hold first cell's properties
+	while(fgets(line, MAX, fileMap))
 	{
 		strcat(cellInfo,line);
 	}
 	fclose(fileMap);
 	// finish reading from original file
 	// write to save files
-	savePlayer(atoi(size),atoi(xCoord),atoi(yCoord),atoi(energy),atoi(whiffles));
-	saveInventory(inventory,11);
+	savePlayer(atoi(size),xC,yC,atoi(energy),atoi(whiffles));
+	saveInventory(inventory,COUNT);
 	saveMap(atoi(size),cellInfo);
-	printf("Exit loadSave");
+	return 0;
 }
