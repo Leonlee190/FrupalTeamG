@@ -40,6 +40,7 @@ void drawMap(struct map updMap){
     printf("<head>\n");
     printf("    <style>\n");
     printf("        .map{\n");
+    printf("            position:relative;\n");
     printf("            width:%d;\n", updMap.dimensions * 32);
     printf("            height:%d;\n", updMap.dimensions * 32);
     printf("            background-color:saddlebrown;\n");
@@ -50,17 +51,27 @@ void drawMap(struct map updMap){
     printf("            width:32px;\n");
     printf("            height:32px;\n");
     printf("            color:white;\n");
+    printf("            float:left;\n");
+    printf("            outline:none !important;}\n");
+    printf("        .object{\n");
+    printf("            position:relative;\n");
+    printf("            width:32px;\n");
+    printf("            height:32px;\n");
+    printf("            outline:none !important;\n");
+    printf("            float:left;\n");
+    printf("            z-index:3;}\n");
+    printf("        .terrain{\n");
+    printf("            position:relative;\n");
+    printf("            width:32px;\n");
+    printf("            height:32px;\n");
     printf("            outline:none !important;\n");
     printf("            float:left;\n");
     printf("            z-index:1;}\n");
-    printf("        .object{\n");
-    printf("            text-align:center;\n");
-    printf("            width:32px;\n");
-    printf("            height:32px;\n");
-    printf("            color:white;\n");
-    printf("            outline:none !important;\n");
-    printf("            float:left;\n");
-    printf("            z-index:2;}\n");
+   // printf("            left:0;\n");
+   // printf("            right:0;\n");
+   // printf("            position:relative;}\n");
+    printf("        #player{\n");
+    printf("            position:relative;}\n");
     printf("    </style>\n");
     printf("</head>\n");
     printf("<body>\n");
@@ -70,13 +81,14 @@ void drawMap(struct map updMap){
     if(updMap.cells[0] != NULL){
         for(int i = 0; i < updMap.dimensions; ++i){
             for(int j = 0; j < updMap.dimensions; ++j){
-                printf("\t\t\t<div class='cell'><img src='assets/");
+                printf("\t\t\t<div class='cell'><img class='terrain' src='assets/");
                 /*
                 if(updMap.cells[i][j].isVisible == 0){
                     printf("fog.gif'>");
                 }
                 else{
                 */
+                //Draw the underlying terrain on z-index 1
                     switch(updMap.cells[i][j].terrain){
                         case 0:{   //Draw a meadow tile
                                    printf("meadow.png'>");
@@ -105,6 +117,49 @@ void drawMap(struct map updMap){
                         default:
                                break;
                     }
+                //Draw the object on top of the terrain on z-index 2
+                printf("<img class='object' src='assets/");
+                    switch(updMap.cells[i][j].terrain){
+                        case 0:{   //Draw no object 
+                                   printf("tree.png'>");
+                                   break;
+                               }
+                        case 1:{   //Draw a tree
+                                   printf("tree.png'>");
+                                   break;
+                               }
+                        case 2:{   //Draw a black berry bush
+                                   printf("diamond.png'>");
+                                   break;
+                               }
+                        case 3:{   //Draw a power bar
+                                   printf("tree.png'>");
+                                   break;
+                               }
+                        case 4:{   //Draw a Type 1 Treasure Chest
+                                   printf("tree.png'>");
+                                   break;
+                               }
+                        case 5:{   //Draw a Type 2 Treasure Chest
+                                   printf("tree.png'>");
+                                   break;
+                               }
+                        case 6:{   //Draw the royal diamonds
+                                   printf("diamond.png'>");
+                                   break;
+                               }
+                        case 7:{   //Draw a clue
+                                   printf("clue.png'>");
+                                   break;
+                               }
+                        default:
+                               break;
+                    }
+                //Draw the player character if they are on this cell
+                /*
+                if(
+                printf("\t\t\t<div class='cell'><img id='player' src='assets/");
+                */
                 //}
                 printf("</div>\n");
             }
