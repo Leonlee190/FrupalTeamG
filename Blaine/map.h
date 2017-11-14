@@ -29,14 +29,14 @@ struct cell makeCell(int x, int y, int visibility, int land, const char* inItem)
 struct map {
 	int dimensions;
 	struct cell** cells;
-    int rdX, rdY;
-    int loaded;
+	int rdX, rdY;
+	int loaded;
 };
 
 //allocates memory for the map, then initializes all cells to be empty and invisible
 void initializeMap(int size, struct map* inMap) {
 	inMap->dimensions = size;
-    inMap->loaded = 0;
+	inMap->loaded = 0;
 
 	inMap->cells = malloc(size * sizeof(struct cell*));
 
@@ -60,7 +60,8 @@ void deallocateMap(int size, struct map* inMap) {
 	free(inMap->cells);
 }
 
-//debug function to validate all files end up in the right spot
+
+/*debug function to validate all files end up in the right spot
 void printMap(int size, struct map* inMap) {
 	for (int x = 0; x < size; ++x) {
 		for (int y = 0; y < size; ++y){
@@ -73,6 +74,7 @@ void printMap(int size, struct map* inMap) {
 		printf("\n");
 	}
 }
+*/
 
 //main parsing routine to load in a map
 struct map makeMap(char* filename) {
@@ -87,12 +89,12 @@ struct map makeMap(char* filename) {
 		//dimensions line
 		if (lineCount == 1) {
 			++lineCount;
-            //convert the cstring to its integer value, we get the map dimensions
+			//convert the cstring to its integer value, we get the map dimensions
 			int dimensions = atoi(line);
 
 			initializeMap(dimensions, &retMap);
-            continue;
-        }
+			continue;
+		}
 		//all other lines are mentioned map cells
 		if (lineCount >= 2) {
 			char* tmp = strtok(line, ",");
@@ -103,49 +105,52 @@ struct map makeMap(char* filename) {
 				switch (fieldCount) {
 				case 0:
 					//xCoord
-                    ++fieldCount;
-                    int x = atoi(tmp);
-                    if(x > retMap.dimensions - 1)
-					    return retMap;
-                    else
-                        temp.xCoord = x;
+					++fieldCount;
+					int x = atoi(tmp);
+					if(x > retMap.dimensions - 1)
+						return retMap;
+					else
+						temp.xCoord = x;
 					tmp = strtok(NULL, ",");
 					continue;
 				case 1:
 					//yCoord
-                    ++fieldCount;
-                    int y = atoi(tmp);
-                    if(y > retMap.dimensions - 1)
-                        return retMap;
-                    else
-                        temp.yCoord = y;
+					++fieldCount;
+					int y = atoi(tmp);
+					if(y > retMap.dimensions - 1)
+						return retMap;
+					else
+						temp.yCoord = y;
 					tmp = strtok(NULL, ",");
 					continue;
 				case 2:
 					//visibility
-                    ++fieldCount;
+					++fieldCount;
 					if(atoi(tmp) != 1)
-                        temp.isVisible = 0;
-                    else
-                        temp.isVisible = 1;
-                    tmp = strtok(NULL, ",");
+						temp.isVisible = 0;
+					else
+						temp.isVisible = 1;
+					tmp = strtok(NULL, ",");
 					continue;
 				case 3:
 					//terrain
-                    ++fieldCount;
+					++fieldCount;
 					if(atoi(tmp) > 5)
-                        temp.terrain = 0;
-                    else
-                        temp.terrain = atoi(tmp);
-                    tmp = strtok(NULL, ",");
+						temp.terrain = 0;
+					else
+						temp.terrain = atoi(tmp);
+					tmp = strtok(NULL, ",");
 					continue;
 				case 4:
 					//item
-                    ++fieldCount;
-                    if(strcmp(tmp, "Royal Diamonds") == 0){
-                        retMap.rdX = temp.xCoord;
-                        retMap.rdY = temp.yCoord;
-                    }
+					++fieldCount;
+					if(strcmp(tmp, "Royal Diamonds") == 0){
+						retMap.rdX = temp.xCoord;
+						retMap.rdY = temp.yCoord;
+					}
+					//remove newline character from the string before copying it so any output doesn't get weird
+					tmp[strlen(tmp)-1] = '\0';
+					
 					strcpy(temp.item, tmp);
 					tmp = strtok(NULL, ",");
 					continue;
@@ -158,9 +163,9 @@ struct map makeMap(char* filename) {
 			retMap.cells[temp.xCoord][temp.yCoord] = temp;
 		}//end main routine
 	}
-    //if we get here, the map is fully loaded with no issues
-    retMap.loaded = 1;
-    fclose(inFile);
+	//if we get here, the map is fully loaded with no issues
+	retMap.loaded = 1;
+	fclose(inFile);
 	return retMap;
 }
 
