@@ -6,7 +6,6 @@
  */
 
 #include "Map_Display.h"
-
 char name[20];
 s_cgi *cgi;     //Define a pointer of type s_cgi, call it cgi
 
@@ -31,10 +30,30 @@ void main(void){
     printf("    <input type='submit' value='run cgi'>");
     printf("</form>");
     */
+    setVisible(2, 4, gameMap);
     drawMap(gameMap);
 }
 
-//Generate the map
+
+/*  Set the visibility of the p
+ *  Input:
+ *      int playerX:        The X coordinate of the player on the map
+ *      int playerY:        The Y coordinate of the player on the map
+ *      struct map updMap:  The map generated from a file 
+ */
+void setVisible(int playerX, int playerY, struct map updMap){
+    for(int i = playerX - 1; i <= playerX + 1; ++i){
+        for(int j = playerY - 1; j <= playerY + 1; ++j){
+            updMap.cells[i][j].isVisible = 1;
+        }
+    }
+}
+
+
+/*  Generate and output the html for displaying the map
+ *  Input:
+ *      struct map updMap: The map generated from a file 
+ */
 void drawMap(struct map updMap){
     printf("<html>\n");
     printf("<head>\n");
@@ -59,7 +78,7 @@ void drawMap(struct map updMap){
     printf("            height:32px;\n");
     printf("            outline:none !important;\n");
     printf("            float:left;\n");
-    printf("            z-index:3;}\n");
+    printf("            z-index:2;}\n");
     printf("        .terrain{\n");
     printf("            position:relative;\n");
     printf("            width:32px;\n");
@@ -71,7 +90,8 @@ void drawMap(struct map updMap){
    // printf("            right:0;\n");
    // printf("            position:relative;}\n");
     printf("        #player{\n");
-    printf("            position:relative;}\n");
+    printf("            position:relative;\n");
+    printf("            z-index:3;}\n");
     printf("    </style>\n");
     printf("</head>\n");
     printf("<body>\n");
@@ -82,13 +102,11 @@ void drawMap(struct map updMap){
         for(int i = 0; i < updMap.dimensions; ++i){
             for(int j = 0; j < updMap.dimensions; ++j){
                 printf("\t\t\t<div class='cell'><img class='terrain' src='assets/");
-                /*
                 if(updMap.cells[i][j].isVisible == 0){
                     printf("fog.gif'>");
                 }
                 else{
-                */
-                //Draw the underlying terrain on z-index 1
+                    //Draw the underlying terrain on z-index 1
                     switch(updMap.cells[i][j].terrain){
                         case 0:{   //Draw a meadow tile
                                    printf("meadow.png'>");
@@ -117,8 +135,55 @@ void drawMap(struct map updMap){
                         default:
                                break;
                     }
-                //Draw the object on top of the terrain on z-index 2
-                printf("<img class='object' src='assets/");
+                    //Draw the objects on top of the terrain
+                    drawObjects(i, j, updMap);
+                    //Draw the player character if they are on this cell on z-index 3
+                    if(comparePlayerToCoor(i, j)){
+                        printf("\t\t\t<div class='cell'><img id='player' src='assets/player.png'></div>\n");
+                    }
+                }
+                printf("</div>\n");
+            }
+        }
+    }
+    else{
+        printf("\n\nTHE MAP IS NOT THERE\n\n");
+    }
+    printf("        </div>"); 
+    printf("    </div>"); 
+    printf("</body>"); 
+    printf("</html>");
+}
+
+
+/*  Determines if the player is at this location on the map
+ *  Input:
+ *      cellX:  An X coordinate from the map
+ *      cellY:  A Y coordinate from the map
+ *  Output:
+ *      true:   The player's coordinates match cellX and cellY
+ *      false:  The player's coordinates do not match cellX and cellY
+ */
+bool comparePlayerToCoor(int cellX, int cellY){
+    //STUB
+    bool here = false;
+    if(cellX == 2 && cellY == 4)
+        here = true;
+    return here;
+}
+
+
+
+/*  Draws the objects of the map on top of the terrain
+ *  Input:
+ *      i:  [FILL] 
+ *      j:  [FILL]
+ *  Output:
+ *      N/A
+ */
+void drawObjects(int i, int j, struct map updMap){
+                    //Draw the object on top of the terrain on z-index 2
+                    printf("<img class='object' src='assets/");
                     switch(updMap.cells[i][j].terrain){
                         case 0:{   //Draw no object 
                                    printf("tree.png'>");
@@ -129,19 +194,19 @@ void drawMap(struct map updMap){
                                    break;
                                }
                         case 2:{   //Draw a black berry bush
-                                   printf("diamond.png'>");
+                                   printf("bush.png'>");
                                    break;
                                }
                         case 3:{   //Draw a power bar
-                                   printf("tree.png'>");
+                                   printf("powerbar.png'>");
                                    break;
                                }
                         case 4:{   //Draw a Type 1 Treasure Chest
-                                   printf("tree.png'>");
+                                   printf("chest1.png'>");
                                    break;
                                }
                         case 5:{   //Draw a Type 2 Treasure Chest
-                                   printf("tree.png'>");
+                                   printf("chest2.png'>");
                                    break;
                                }
                         case 6:{   //Draw the royal diamonds
@@ -155,21 +220,4 @@ void drawMap(struct map updMap){
                         default:
                                break;
                     }
-                //Draw the player character if they are on this cell
-                /*
-                if(
-                printf("\t\t\t<div class='cell'><img id='player' src='assets/");
-                */
-                //}
-                printf("</div>\n");
-            }
-        }
-    }
-    else{
-        printf("\n\nTHE MAP IS NOT THERE\n\n");
-    }
-    printf("        </div>"); 
-    printf("    </div>"); 
-    printf("</body>"); 
-    printf("</html>");
 }
