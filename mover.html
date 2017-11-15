@@ -1,35 +1,19 @@
 <html>
 
+<head>
 <style>
 
 div.d1{
-    width: 300px;
+    width: 1000px;
     padding: 30px;
-    border-style: groove;
-}
-
-div.d2{
-    margin: 30px;
-    width: 300px;
-    padding: 50px;
-    box-sizing: border-box;
     border-style: groove;
 }
 
 </style>
 
-<script>
+</head>
 
-function direction(str){
-    arguments = "dir="+str;
-    var xhttp = new XMLHttpRequest();
-    URL = "mover.cgi?"+arguments;
-    
-    xhttp.open("GET",URL,false);
-    xhttp.send();
-    //alert(xhttp.responseText);
-    document.getElementById("Player_info").innerHTML = xhttp.responseText;
-}
+<script>
 
 function keyEntry(event){
     var x = event.keyCode || event.which;
@@ -45,44 +29,7 @@ function keyEntry(event){
     document.getElementById("Player_info").innerHTML = xhttp.responseText;
 }
 
-function getInventory()
-{
-	var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-                if(this.readyState == 4 && this.status == 200)
-                {
-                document.getElementById("inventoryView").innerHTML =
-                this.responseText;
-                }
-        };
-        xhttp.open("GET", "PlayerInventory.cgi", false);
-        xhttp.send();
-}
-
-function toggleInventory()
-{
-	getInventory();
-	var inv = document.getElementById("inventoryView");
-	var invTogg = document.getElementById("invToggle");
-	if(inv.style.visibility == "hidden")
-	{
-	inv.style.visibility = "visible";
-	invTogg.value = "Hide inventory";
-	}
-	else
-	{
-	inv.style.visibility = "hidden";
-	invTogg.value = "Show inventory";
-	}
-}
-
 </script>
-
-<head>
-
-<h1>Frugal? Land? Huh?</h1>
-
-</head>
 
 <body>
 
@@ -91,38 +38,12 @@ function toggleInventory()
 
 <br>
 <input type="text" size="40" onkeypress="keyEntry(event)">
-
-<br><br><br><br>Or! Click the button for direction!<br>
-
-<div class="d2">
-
-&emsp;&emsp;&emsp;&emsp;<input type="button" name="dir" onclick="direction('N')" value="North">
 <br><br>
-
-<input type="button" name="dir" onclick="direction('W')" value="West">
-&emsp;&emsp;&emsp;&emsp;&emsp;<input type="button" name="dir" onclick="direction('E')" value="East">
-
-<br><br>
-&emsp;&emsp;&emsp;&emsp;<input type="button" name="dir" onclick="direction('S')" value="South">
-
-<br></div>
 
 <div class="d1"  id="Player_info">
 
 Player Data
 
-</div>
-
-<br><br>
-
-<form>
-
-  <input type="button" value="Show inventory" id="invToggle" onclick="toggleInventory()" \>
-
-</form>
-
-<div id="inventoryView" style="visibility:hidden">
-inventory
 </div>
 
 </body>

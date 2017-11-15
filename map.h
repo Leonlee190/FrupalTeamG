@@ -6,18 +6,18 @@
 #include <string.h>
 
 struct cell {
-	int xCoord, yCoord;
-	char terrain;
-	char item[14];
-	int isVisible;
+    int xCoord, yCoord;
+    char terrain;
+    char item[14];
+    int isVisible;
 };
 
 //creates a cell, constructor essentially, but because C doesn't have constructors, i need to define it outside of the struct
 struct cell makeCell(int x, int y, int visibility, int land, const char* inItem);
 
 struct map {
-	int dimensions;
-	struct cell** cells;
+    int dimensions;
+    struct cell** cells;
     int rdX, rdY;
     int loaded;
 };

@@ -3,7 +3,6 @@
 4,2,0,1,None
 0,4,0,0,Royal Diamonds
 1,4,0,4,None
-0,4,0,5,None
 3,2,0,0,Hatchet
 1,4,0,0,Machete
 2,1,0,0,Power Bar
