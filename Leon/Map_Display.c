@@ -190,41 +190,37 @@ bool comparePlayerToCoor(int cellX, int cellY, int pX, int pY){
  */
 void drawObjects(int i, int j, struct map updMap){
     //Draw the object on top of the terrain on z-index 2
-    printf("<img class='object' src='assets/");
-    switch(updMap.cells[i][j].terrain){
-        case 0:{   //Draw no object 
-                   printf("tree.png'>");
-                   break;
-               }
-        case 1:{   //Draw a tree
-                   printf("tree.png'>");
-                   break;
-               }
-        case 2:{   //Draw a black berry bush
-                   printf("bush.png'>");
-                   break;
-               }
-        case 3:{   //Draw a power bar
-                   printf("powerbar.png'>");
-                   break;
-               }
-        case 4:{   //Draw a Type 1 Treasure Chest
-                   printf("chest1.png'>");
-                   break;
-               }
-        case 5:{   //Draw a Type 2 Treasure Chest
-                   printf("chest2.png'>");
-                   break;
-               }
-        case 6:{   //Draw the royal diamonds
-                   printf("diamond.png'>");
-                   break;
-               }
-        case 7:{   //Draw a clue
-                   printf("clue.png'>");
-                   break;
-               }
-        default:
-               break;
-    }
+     if(!strcmp("None", updMap.cells[i][j].item)){}
+     else{  
+         printf("<img class='object' ");
+         if(!strcmp("Tree", updMap.cells[i][j].item)){
+             //Draw a tree on z-index 2
+             printf("src='assets/tree.png'");
+         }
+         else if(!strcmp("Bush", updMap.cells[i][j].item)){
+             //Draw a Black Berry Bush on z-index 2
+             printf("src='assets/bush.png'");
+         }
+         else if(!strcmp("Power Bar", updMap.cells[i][j].item)){
+             //Draw a Power Bar on z-index 2
+             printf("src='assets/powerbar.png'");
+         }
+         else if(!strcmp("Treasure Chest 1", updMap.cells[i][j].item)){
+             //Draw a Type 1 Treasure Chest on z-index 2
+             printf("src='assets/chest1.png'");
+         }
+         else if(!strcmp("Treasure Chest 2", updMap.cells[i][j].item)){
+             //Draw a Type 2 Treasure Chest on z-index 2
+             printf("src='assets/chest2.png'");
+         }
+         else if(!strcmp("Royal Diamonds", updMap.cells[i][j].item)){
+             //Draw a Royal Diamonds on z-index 2
+             printf("src='assets/diamond.png'");
+         }
+         else if(!strcmp("Clue", updMap.cells[i][j].item)){
+             //Draw a Clue on z-index 2
+             printf("src='assets/clue.png'");
+         }
+         printf(">");
+     }
 }
