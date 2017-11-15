@@ -149,7 +149,8 @@ struct map makeMap(char* filename) {
 						retMap.rdY = temp.yCoord;
 					}
 					//remove newline character from the string before copying it so any output doesn't get weird
-					tmp[strlen(tmp)-1] = '\0';
+					if(tmp[strlen(tmp)-1] == '\n')
+						tmp[strlen(tmp)-1] = '\0';
 					
 					strcpy(temp.item, tmp);
 					tmp = strtok(NULL, ",");
