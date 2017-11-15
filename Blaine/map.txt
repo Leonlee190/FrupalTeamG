@@ -9,8 +9,9 @@ FRUPAL Test 1
 4,2,0,1,None
 0,4,0,0,Royal Diamonds
 0,3,0,5,None
-3,2,0,0,Hatchet
-1,4,0,4,Machete
+3,2,0,0,Treasure Chest 1
+1,4,0,4,Boulder
 2,1,0,0,Power Bar
 0,2,0,0,Clue
-0,0,0,0,Axe
+1,2,0,0,Treasure Chest 2
+0,0,0,0,Bush

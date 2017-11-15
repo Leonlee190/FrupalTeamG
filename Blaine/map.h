@@ -8,7 +8,7 @@
 struct cell {
 	int xCoord, yCoord;
 	char terrain;
-	char item[14];
+	char item[32];
 	int isVisible;
 };
 
