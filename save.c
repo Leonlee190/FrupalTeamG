@@ -5,6 +5,8 @@
   ************************/
 #include "save.h"
 
+// params: size = map dimension, xCoord/yCoord = current player coordinates
+// 	energy = current player energy, whiffles = current player whiffles
 // return 0 if successful
 int savePlayer(int size, int xCoord, int yCoord, int energy, int whiffles)
 {
@@ -24,6 +26,7 @@ int savePlayer(int size, int xCoord, int yCoord, int energy, int whiffles)
 	return fclose(fileUser);
 }
 
+// params: bag = useful inventory array, length = size of inventory array
 // return 0 if successful
 int saveInventory(int * bag, int length)
 {
@@ -45,6 +48,7 @@ int saveInventory(int * bag, int length)
 	return fclose(fileBag);
 }
 
+// params: size = map dimension, cellData = block of map cell data from original file
 // return 0 if successful
 int saveMap(int size, char * cellData)
 {
@@ -64,8 +68,10 @@ int saveMap(int size, char * cellData)
 }
 
 // update map file with new visible cells and used items
+// params: size = map dimension, xC/yC, current player coordinates
+// 	vision = (1/2) binocular toggle, mapCells = map data
 // return 0 if successful
-int updateMap(int xC, int yC, int vision, struct map * mapCells)
+int updateMap(int size, int xC, int yC, int vision, struct map * mapCells)
 {
 	// file variables
 	char * MAP = "Save_MapCells_TeamG.txt";
@@ -76,6 +82,8 @@ int updateMap(int xC, int yC, int vision, struct map * mapCells)
 		printf("Error opening %s\n", MAP);
 		return 1;
 	}
+	// write the map dimension to the save file
+	fprintf(fileMap, "%d\n", size);
 	// loop through map cells with nested for
 	for(int i = 0; i < mapCells->dimensions; ++i)
 	{
