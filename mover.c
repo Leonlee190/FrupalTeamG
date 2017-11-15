@@ -26,6 +26,8 @@ int main(){
 
     obs_check(fx, fy, place);
 
+    item_check(fx, fy, place);
+
     hero = load();
 
     if(hero.energy < 1){
