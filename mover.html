@@ -27,12 +27,22 @@ function keyEntry(event){
     xhttp.send();
 
     document.getElementById("Player_info").innerHTML = xhttp.responseText;
+
+    xhttp.open("GET", "Display.cgi", false);
+    xhttp.send();
+
+    document.getElementById("Map_display").innerHTML = xhttp.responseText;
 }
 
 </script>
 
 <body>
 
+<div id="Map_display">
+
+
+</div>
+<br>
 <br>Type in the direction you want to take in the text box!<br>
 <br>w = North  |  s = South  |  a = West  |  d = East<br>
 
